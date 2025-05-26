@@ -8,7 +8,7 @@ python script_training.py \
     --BatchSize 10 \
     --Seed 1 \
     --SaveCheckInterval 1 \
-    --IsTbLog True \
+    --IsTbLog False \
     --IsDeter True \
     --DataRoot ./datasets/processed/ \
     --ModelRoot ./results/ \

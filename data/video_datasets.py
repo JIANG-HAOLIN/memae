@@ -129,3 +129,59 @@ class VideoDatasetOneDir(Dataset):
                                 in frame_idx], 1)
 
         return item, frames
+
+
+class VideoDatasetPy(Dataset):
+    def __init__(self, idx_root, frame_root, transform=None):
+        self.idx_root = idx_root
+        self.frame_root = frame_root
+
+        # only .npz files now
+        self.idx_path_list = []
+        for vid in sorted(os.listdir(self.idx_root)):
+            vid_dir = os.path.join(self.idx_root, vid)
+            if not os.path.isdir(vid_dir):
+                continue
+            for fname in sorted(os.listdir(vid_dir)):
+                if fname.endswith('.npz'):
+                    self.idx_path_list.append(os.path.join(vid_dir, fname))
+
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.idx_path_list)
+
+    def __getitem__(self, item):
+        idx_path = self.idx_path_list[item]
+        data = np.load(idx_path, allow_pickle=True)
+
+        # extract video name
+        v_name = data['v_name']
+        # if stored as array-scalar or bytes
+        if isinstance(v_name, np.ndarray):
+            v_name = v_name.item()
+        if isinstance(v_name, bytes):
+            v_name = v_name.decode('utf-8')
+
+        # extract frame indices
+        frame_idx = data['idx'].astype(int)
+
+        # build frames tensor
+        v_dir = os.path.join(self.frame_root, v_name)
+        to_tensor = transforms.ToTensor()
+
+        frames_list = []
+        for i in frame_idx:
+            path = os.path.join(v_dir, f"{i:03d}.jpg")
+            img = io.imread(path)
+            if self.transform:
+                img = self.transform(img)
+            else:
+                img = to_tensor(img)
+            # each transform returns C×H×W; we want to stack on frame dimension
+            frames_list.append(img.unsqueeze(1))
+
+        frames = torch.cat(frames_list, dim=1)
+        return item, frames
+
+

@@ -32,7 +32,7 @@ class TestOptions():
         parser.add_argument('--ShrinkThres', help='ShrinkThres', type=float, default=0.0025)
         ##
         parser.add_argument('--ModelRoot', help='Path and name for trained model.', type=str, default='./models/')
-        parser.add_argument('--ModelFilePath', help='Path for a pretrained modle.', type=str, default=None)
+        parser.add_argument('--ModelFilePath', help='Path for a pretrained modle.', type=str, default="/home/haoj/memae/models/model_MemAE_Conv3DSpar_UCSD_P2_256_MemDim2000_EntW0.0002_ShrThres0.0025_Seed1_Non/MemAE_Conv3DSpar_UCSD_P2_256_MemDim2000_EntW0.0002_ShrThres0.0025_Seed1_Non_epoch_0031.pt")
         parser.add_argument('--DataRoot', help='DataPath', type=str, default='./dataset/')
         parser.add_argument('--OutRoot', help='Path for output', type=str, default='./results/')
         ##

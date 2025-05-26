@@ -107,9 +107,10 @@ def get_model_setting(opt):
     elif(opt.ModelName == 'AE'):
         model_setting = opt.ModelName + '_' + opt.ModelSetting + '_' + opt.Dataset \
                         + '_' + opt.Suffix
+        RuntimeError('Wrong Model Name.')
     else:
         model_setting = ''
-        print('Wrong Model Name.')
+        RuntimeError('Wrong Model Name.')
     return model_setting
 
 def weights_init(m):
